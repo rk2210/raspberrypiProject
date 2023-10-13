@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>List of devices</title>
+</head>
+<body>
+  <h1>List of devices</h1>
+  {% for el in devlist %}
+      <h2>{{ el.adress }}</h2>
+  
+  {% endfor %}
+  <p>Name: {{ name }}</p>
+
+</body>
+</html>
