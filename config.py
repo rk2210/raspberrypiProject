@@ -12,16 +12,16 @@ class BaseConfig:
 class DevelopementConfig(BaseConfig):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEVELOPMENT_DATABASE_URI') or \
-        'sqlite:////home/papi22/Project/raspberrypiProject/DataDevices.db'
+        'sqlite:////raspberrypiProject/DataDevices.db'
 
 
 class TestingConfig(BaseConfig):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TESTING_DATABASE_URI') or \
-			      'sqlite:////home/papi22/Project/raspberrypiProject/DataDevices.db'
+			      'sqlite:////raspberrypiProject/DataDevices.db'
 
 
 class ProductionConfig(BaseConfig):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('PRODUCTION_DATABASE_URI') or \
-	'sqlite:////home/papi22/Project/raspberrypiProject/DataDevices.db'
+	'sqlite:////raspberrypiProject/DataDevices.db'
