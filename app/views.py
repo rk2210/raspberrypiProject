@@ -1,17 +1,21 @@
 from app import app
 from flask import  request, redirect,  url_for, session, jsonify
 from .models import Device, Devicetype, Data, db, DataSchema
+from .nrf905.nrf905 import Nrf905
 import datetime
 import sqlite3
 import json
  
-@app.route('/add_new_data', methods=['POST'])
+@app.route('/add_new_data', methods=['POST', 'GET'])
 def add_new_data():
-    data = request.json
+    receiver = Nrf905()
+    data = receiver.open(433)
     schema = DataSchema()
-    result = schema.load(data)
-    db.session.add(result)
-    db.session.commit()
+    result = schema.dump(jsonify(data))
+    receiver.close()
+    for i in result:
+        db.session.add(i)
+        db.session.commit()
     return 'Data is succesfully commited!'
 
 @app.route('/devicelist', methods=['GET'])
