@@ -2,7 +2,7 @@ from app import app
 from flask import  request, redirect,  url_for, session, jsonify
 from .models import Device, Devicetype, Data, db, DataSchema
 from .nrf905.nrf905 import Nrf905
-import datetime
+from datetime import date
 import sqlite3
 import json
  
@@ -13,9 +13,8 @@ def add_new_data():
     schema = DataSchema()
     result = schema.dump(jsonify(data))
     receiver.close()
-    for i in result:
-        db.session.add(i)
-        db.session.commit()
+    db.session.add(result)
+    db.session.commit()
     return 'Data is succesfully commited!'
 
 @app.route('/devicelist', methods=['GET'])
@@ -28,13 +27,19 @@ def get_devicelist():
     conn.close()
     return jsonify(result)
 
-@app.route('/data/<int:device_id>/<string:day>/<string:month>/<string:year>', methods=['GET'])
-def get_data_by_posttime(device_id, day, month, year):
-    calend = day + '/' + month + '/' + year
-    posted_at = datetime.datetime.strptime(calend, '%d/%M/%Y')
+@app.route('/get_data_by_postdate', methods=['GET'])
+def get_data_by_posttime():
+    year_start = int(input('Enter start year: '))
+    month_start = int(input('Enter start month: '))
+    date_start = int(input('Enter start date: '))
+    posted_at_start = date(year_start, month_start, date_start)
+    year_finish = int(input('Enter finish year: '))
+    month_finish = int(input('Enter finish month: '))
+    date_finish = int(input('Enter finish date: '))
+    posted_at_finish = date(year_finish, month_finish, date_finish)
     conn = sqlite3.connect('DataDevices.db')
     curs = conn.cursor()
-    curs.execute('SELECT * FROM data WHERE device_id = :device_id AND posted_at = :posted_at', {'device_id': device_id, 'posted_at':posted_at})
+    curs.execute('SELECT * FROM data WHERE :posted_at_finish > posted_at > :posted_at_start', {'posted_at_finish':posted_at_finish, 'posted_at_start':posted_at_start})
     result = curs.fetchall()
     curs.close()
     conn.close()
