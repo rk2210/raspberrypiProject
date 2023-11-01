@@ -1,5 +1,5 @@
 from app import db
-from datetime import datetime
+import datetime
 from marshmallow import Schema, fields, post_load
 
 class  Devicetype(db.Model):
