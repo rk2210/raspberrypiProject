@@ -7,5 +7,6 @@ def make_shell_context():
     return dict(app=app, db=db, Device = Device, Devicetype = Devicetype, Data = Data)
 
 
+
 if __name__ == "__main__":
     app.run(debug=True)
