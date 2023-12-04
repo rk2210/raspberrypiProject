@@ -1,5 +1,8 @@
 from app import db
 from datetime import datetime
+from flask_wtf import FlaskForm
+from wtforms import DateField, SubmitField
+from wtforms.validators import DataRequired
 from marshmallow import Schema, fields, post_load
 
 class  Devicetype(db.Model):
@@ -22,7 +25,7 @@ class Data(db.Model):
     __tablename__ = 'data'
     _id = db.Column(db.Integer(), primary_key=True)
     statusmod = db.Column(db.String(256), db.ForeignKey('statusmodels.name'))
-    data = db.Column(db.Text(), nullable=False)
+    data = db.Column(db.JSON(), nullable=False)
     posted_at = db.Column(db.DateTime(), default=datetime.utcnow, nullable = False)
     device_id = db.Column(db.Integer(), db.ForeignKey('devices._id'))
 
@@ -45,4 +48,7 @@ class DataSchema(Schema):
     def make_data(self, data, **kwargs):
         return Data(**data)
 
-
+class DateForm(FlaskForm):
+    startdate = DateField("Enter start date", format='%Y-%m-%d', validators=[DataRequired()])
+    enddate = DateField("Enter end date", format='%Y-%m-%d', validators=[DataRequired()])
+    submit = SubmitField("Check")

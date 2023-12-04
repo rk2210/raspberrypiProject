@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<form action="" method="get" >
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.startdate.label }}<br>
+            {{ form.startdate(size=32) }}
+        </p>
+        <p>
+            {{ form.enddate.label }}<br>
+            {{ form.enddate(size=32) }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+
+</body>
+</html>
