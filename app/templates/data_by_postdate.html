@@ -5,17 +5,10 @@
     <title></title>
 </head>
 <body>
-<form action="" method="get" >
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.startdate.label }}<br>
-            {{ form.startdate(size=32) }}
-        </p>
-        <p>
-            {{ form.enddate.label }}<br>
-            {{ form.enddate(size=32) }}
-        </p>
-        <p>{{ form.submit() }}</p>
+<form action="/verify" method="POST" >
+        <p>start_date <input type = "datetime-local" name = "startdate" /></p>
+        <p>end_date <input type = "datetime-local" name = "enddate" /></p>
+    <p><input type = "submit" value = "Submit" /></p>
     </form>
 
 </body>

@@ -2,7 +2,7 @@ from app import app
 from flask import request, redirect,  url_for, session, jsonify, render_template
 from .models import db, DataSchema, DateForm
 #from .nrf905.nrf905 import Nrf905
-from datetime import date
+import datetime
 import sqlite3
 import json
 
@@ -38,19 +38,36 @@ def get_devicelist():
     conn.close()
     return jsonify(result)
 
-@app.route('/get_data_by_postdate', methods=['GET'])
-def get_data_by_posttime():
-    form = DateForm()
-    render_template('data_by_postdate.html', form=form)
-    posted_at_start = request.form.get('startdate')
-    posted_at_finish = request.form.get('enddate')
+@app.route('/get_data_by_postdate')
+def get_data_by_postdate():
     conn = sqlite3.connect('instance/DataDevices.db')
     curs = conn.cursor()
-    curs.execute('SELECT * FROM data WHERE :posted_at_finish > posted_at > :posted_at_start', {'posted_at_finish': posted_at_finish, 'posted_at_start': posted_at_start})
+    curs.execute('SELECT * FROM data')
+                 #WHERE :posted_at_finish > posted_at > :posted_at_start', {'posted_at_finish': posted_at_finish, 'posted_at_start': posted_at_start})
     result = curs.fetchall()
     curs.close()
     conn.close()
-    return render_template('data_by_postdate.html', form=form)
+    return result
+
+
+@app.route('/verify', methods=['POST'])
+def verify():
+    posted_at_start = request.form['startdate']
+    posted_at_finish = request.form['enddate']
+    return redirect(f'/get_data_by_postdate/result/{posted_at_start}/{posted_at_finish}')
+
+@app.route('/get_data_by_postdate/result/<posted_at_start>/<posted_at_finish>', methods=['GET', 'POST'])
+def result(posted_at_start, posted_at_finish):
+    conn = sqlite3.connect('instance/DataDevices.db')
+    curs = conn.cursor()
+    curs.execute('SELECT * FROM data')
+                 #WHERE :posted_at_finish > posted_at > :posted_at_start', {'posted_at_finish': posted_at_finish, 'posted_at_start': posted_at_start})
+    result = curs.fetchall()
+    curs.close()
+    conn.close()
+    print(result)
+    return f'Result:{result}'
+
     
 @app.route('/device/<int:device_id>', methods=['GET'])
 def get_device_by_id(device_id):
